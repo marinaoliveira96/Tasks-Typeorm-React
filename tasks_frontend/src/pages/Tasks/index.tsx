@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Badge from 'react-bootstrap/esm/Badge';
 import Table from 'react-bootstrap/esm/Table';
+import Button from 'react-bootstrap/esm/Button';
+import { useHistory } from 'react-router-dom';
 import api from '../../services/api';
 
 import moment from 'moment';
-import Button from 'react-bootstrap/esm/Button';
+
+import './index.css';
 
 interface ITask {
   id: number;
@@ -17,6 +20,7 @@ interface ITask {
 
 const Tasks: React.FC = () => {
   const [tasks, setTasks] = useState<ITask[]>([]);
+  const history = useHistory();
 
   useEffect(() => {
     loadTasks();
@@ -32,10 +36,23 @@ const Tasks: React.FC = () => {
     return moment(date).format('DD/MM/YYYY');
   }
 
+  function newTask() {
+    history.push('/tarefas_cadastro');
+  }
+
+  function editTask(id: number) {
+    history.push(`/tarefas_cadastro/${id}`);
+  }
+
   return (
     <div className="container">
       <br />
-      <h1>Tasks Page</h1>
+      <div className="task-header">
+        <h1>Tasks Page</h1>
+        <Button variant="dark" size="sm" onClick={newTask}>
+          Nova Tarefa
+        </Button>
+      </div>
       <br />
       <Table striped bordered hover className="text-center">
         <thead>
@@ -59,7 +76,9 @@ const Tasks: React.FC = () => {
                 </Badge>
               </td>
               <td>
-                <Button size="sm">Editar</Button>{' '}
+                <Button size="sm" onClick={() => editTask(task.id)}>
+                  Editar
+                </Button>{' '}
                 <Button size="sm" variant="success">
                   Finalizar
                 </Button>{' '}
