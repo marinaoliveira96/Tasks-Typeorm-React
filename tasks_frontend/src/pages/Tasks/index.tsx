@@ -32,6 +32,16 @@ const Tasks: React.FC = () => {
     setTasks(response.data);
   }
 
+  async function finishedTask(id: number) {
+    await api.patch(`/tasks/${id}`);
+    loadTasks();
+  }
+
+  async function deleteTask(id: number) {
+    await api.delete(`/tasks/${id}`);
+    loadTasks();
+  }
+
   function formatDate(date: Date) {
     return moment(date).format('DD/MM/YYYY');
   }
@@ -42,6 +52,10 @@ const Tasks: React.FC = () => {
 
   function editTask(id: number) {
     history.push(`/tarefas_cadastro/${id}`);
+  }
+
+  function viewTask(id: number) {
+    history.push(`/tarefas/${id}`);
   }
 
   return (
@@ -76,16 +90,33 @@ const Tasks: React.FC = () => {
                 </Badge>
               </td>
               <td>
-                <Button size="sm" onClick={() => editTask(task.id)}>
+                <Button
+                  size="sm"
+                  disabled={task.finished}
+                  onClick={() => editTask(task.id)}
+                >
                   Editar
                 </Button>{' '}
-                <Button size="sm" variant="success">
+                <Button
+                  size="sm"
+                  variant="success"
+                  disabled={task.finished}
+                  onClick={() => finishedTask(task.id)}
+                >
                   Finalizar
                 </Button>{' '}
-                <Button size="sm" variant="info">
+                <Button
+                  size="sm"
+                  variant="info"
+                  onClick={() => viewTask(task.id)}
+                >
                   Visualizar
                 </Button>{' '}
-                <Button size="sm" variant="danger">
+                <Button
+                  size="sm"
+                  variant="danger"
+                  onClick={() => deleteTask(task.id)}
+                >
                   Remover
                 </Button>{' '}
               </td>
